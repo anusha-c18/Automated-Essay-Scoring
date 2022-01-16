@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Essay Scoring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-image: url("img1.jpg");
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .title_container {
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 300%;
+            font-weight: bolder;
+            color: white;
+            display: block;
+        }
+
+        .essay_container {
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+            align-items: center;
+            height: 70%;
+            padding: 10px;
+        }
+
+        .essay {
+            color: rgb(80, 6, 6);
+            border: solid rgba(255, 255, 255, 0.267) 2px;
+            border-radius: 20px;
+            width: 80%;
+            height: 100%;
+            resize: none;
+            background-color: rgba(255, 255, 255, 0.267);
+            font-size: medium;
+            padding: 15px;
+        }
+
+        ::placeholder {
+            color: rgb(80, 6, 6);
+            font-weight: bolder;
+        }
+
+        .bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-direction: column;
+            height: 25%;
+        }
+
+        .button {
+            padding: 10px;
+            border: solid rgb(80, 6, 6) 2px;
+            color: white;
+            border-radius: 14px;
+            font-weight: 500;
+            background-color: rgb(80, 6, 6);
+            font-size: large;
+            height: 50px;
+            width: 100px;
+        }
+
+        .score {
+            font-size: x-large;
+            font-weight: bolder;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title_container">
+            <p class="title">Automated Essay Scoring</p>
+        </div>
+        <div class="essay_container">
+            <textarea placeholder="Enter your essay here" id="essay" class="essay"></textarea>
+        </div>
+        <div class="bottom">
+            <button class="button" type="button" onclick="senddata()">Submit</button>
+            <p class="score">Score: ?/10</p>
+        </div>
+    </div>
+    <script>
+        function senddata(){
+            var text = document.getElementById("essay")
+            var output = document.getElementById("score")
+            const obj = {
+                text:text.value
+            }
+            const str = JSON.stringify(obj)
+            fetch("http://127.0.0.1:5000/", {
+                method: 'POST',
+                body: JSON.stringify(obj),
+            }).then((response) => response.json()).then((result) => {
+                if(!result){
+                  output.innerHTML="Score: 0/10";
+                }
+                else{
+                  output.innerHTML="Score: "+result.score+"/10"
+                }
+                console.log('Success:', result);
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+
+        }
+    </script>
+
+</body>
+
+</html>
